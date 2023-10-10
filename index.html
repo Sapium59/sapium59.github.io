@@ -93,37 +93,43 @@
       function initializePage() {
         renderQuestions();
       }
-
+      
       // 提交答案
       function submitAnswer() {
         var answerInput = document.getElementById("answerInput");
         var answer = answerInput.value;
-
+      
         // 获取当前应当回答的题目的正确答案
-        var correctAnswersCount = getCorrectAnswersCount();
         var questionDictionary = getQuestionDictionary();
-        var correctAnswer = questionDictionary[correctAnswersCount].answer;
-
-        if (answer === correctAnswer) {
-          // 更新已答对的题目数量
-          var newCorrectAnswersCount = parseInt(correctAnswersCount) + 1;
-          updateCorrectAnswersCount(newCorrectAnswersCount);
-
-          // 清除输入框的值
-          answerInput.value = "";
-
-          // 重新渲染题目
-          renderQuestions();
-
-          // 判断是否已经解锁了所有题目
-          if (newCorrectAnswersCount === questionDictionary.length) {
-            // 显示 Puzzle2
-            var puzzle2Div = document.getElementById("puzzle2");
-            puzzle2Div.style.display = "block";
+        var unlockMap = getUnlockMap();
+        var correctAnswersCount = getCorrectAnswers().length;
+        var unlockQuestionNumber = unlockMap[correctAnswersCount];
+      
+        for (var i = 0; i < unlockQuestionNumber; i++) {
+          if (!isAnswered(i) && answer === questionDictionary[i].answer) {
+            // 更新已答对的题目编号数组
+            updateCorrectAnswers(i);
+      
+            // 清除输入框的值
+            answerInput.value = "";
+      
+            // 重新渲染题目
+            renderQuestions();
+      
+            // 判断是否已经解锁了所有题目
+            if (getCorrectAnswers().length === questionDictionary.length) {
+              // 显示 Puzzle2
+              var puzzle2Div = document.getElementById("puzzle2");
+              puzzle2Div.style.display = "block";
+            }
+      
+            return;
           }
-        } else {
-          alert("Wrong answer. Try again!");
         }
+      
+        alert("Wrong answer. Try again!");
+      }
+
       }
     </script>
   </head>
