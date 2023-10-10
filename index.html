@@ -27,13 +27,51 @@
           {
             question: "Question 3",
             answer: "Answer 3"
+          },
+          {
+            question: "Question 4",
+            answer: "Answer 4"
+          },
+          {
+            question: "Question 5",
+            answer: "Answer 5"
+          },
+          {
+            question: "Question 6",
+            answer: "Answer 6"
+          },
+          {
+            question: "Question 7",
+            answer: "Answer 7"
+          },
+          {
+            question: "Question 8",
+            answer: "Answer 8"
           }
         ];
       }
 
+      // 获取解锁安排
+      function getUnlockMap() {
+        return {
+          0: 3,
+          1: 4,
+          2: 5,
+          3: 6,
+          4: 7,
+          5: 8,
+          6: 8,
+          7: 8,
+          8: 8
+        };
+      }
+
       // 渲染题目
       function renderQuestions() {
+        // 根据已答对的题目数量，计算当前已解锁到题目数量
         var correctAnswersCount = getCorrectAnswersCount();
+        var unlockMap = getUnlockMap()
+        var unlockQuestionNumber = unlockMap[correctAnswersCount]
         var questionDictionary = getQuestionDictionary();
 
         // 获取题目容器
@@ -42,8 +80,8 @@
         // 清空题目容器
         questionsContainer.innerHTML = "";
 
-        // 根据已答对的题目数量，渲染相应数量的题目
-        for (var i = 0; i < correctAnswersCount; i++) {
+        // 渲染相应数量的题目
+        for (var i = 0; i < unlockQuestionNumber; i++) {
           var question = questionDictionary[i].question;
           var questionElement = document.createElement("p");
           questionElement.textContent = question;
