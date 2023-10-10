@@ -26,49 +26,38 @@
   </div>
 
   <script>
-    // 页面加载时检查用户的提交历史
-    window.onload = function() {
-      var answerHistory = localStorage.getItem("answerHistory");
-      if (answerHistory === "correct") {
-        // 用户之前提交过正确答案，执行相应操作
-        // 例如直接显示Puzzle2
-        var puzzle2Div = document.getElementById("puzzle2");
-        puzzle2Div.style.display = "block";
-      } else {
-        renderQuestions(); // 渲染题目
+    // 页面加载时检查用户解锁的谜题数量
+    function checkUnlockedPuzzleNumber() {
+      var unlockedPuzzleNumber = localStorage.getItem("unlocked_puzzle_number");
+      if (!unlockedPuzzleNumber) {
+        // 初始情况下用户解锁了3道题
+        unlockedPuzzleNumber = 3;
+        localStorage.setItem("unlocked_puzzle_number", unlockedPuzzleNumber);
       }
+      return parseInt(unlockedPuzzleNumber);
     }
 
-    // 检查用户的提交记录
-    function checkAnswerHistory() {
-      var answerHistory = localStorage.getItem("answerHistory");
-      var numberOfCorrectAnswers = 0;
-
-      if (answerHistory) {
-        // 解析存储的答案记录
-        var answers = answerHistory.split(",");
-        numberOfCorrectAnswers = answers.length;
-      }
-
-      return numberOfCorrectAnswers;
-    }
-
-    // 根据用户的提交记录来确定题目数量
-    function determineNumberOfQuestions() {
-      var numberOfCorrectAnswers = checkAnswerHistory();
-      var numberOfQuestionsToShow = numberOfCorrectAnswers + 4; // 显示已解答的题目加上后续的4道新题目
-
-      return numberOfQuestionsToShow;
+    // 获取正确答案列表
+    function getAnswerList() {
+      // 隐藏的答案列表
+      var answerList = [
+        "answer1",
+        "answer2",
+        "answer3",
+        // ...更多答案
+      ];
+      return answerList;
     }
 
     // 渲染题目
     function renderQuestions() {
-      var numberOfQuestionsToShow = determineNumberOfQuestions();
+      var unlockedPuzzleNumber = checkUnlockedPuzzleNumber();
+      var answerList = getAnswerList();
 
-      // 根据题目数量进行渲染
-      for (var i = 1; i <= numberOfQuestionsToShow; i++) {
+      // 根据解锁的谜题数量进行渲染
+      for (var i = 0; i < unlockedPuzzleNumber; i++) {
         var questionElement = document.createElement("p");
-        questionElement.textContent = "Question " + i;
+        questionElement.textContent = "Question " + (i + 1);
         document.body.appendChild(questionElement);
       }
     }
@@ -76,17 +65,32 @@
     // 判断回答正误
     function checkAnswer() {
       var answer = document.getElementById("answerInput").value;
-      if (answer === "correct") {
-        // 存储用户的正确答案
-        localStorage.setItem("answerHistory", "correct");
-        
-        // 显示Puzzle2
-        var puzzle2Div = document.getElementById("puzzle2");
-        puzzle2Div.style.display = "block";
+      var answerList = getAnswerList();
+      var unlockedPuzzleNumber = checkUnlockedPuzzleNumber();
+
+      if (answer === answerList[unlockedPuzzleNumber]) {
+        // 回答正确
+        unlockedPuzzleNumber++;
+        localStorage.setItem("unlocked_puzzle_number", unlockedPuzzleNumber);
+
+        if (unlockedPuzzleNumber === answerList.length) {
+          // 已经解锁了所有谜题，显示Puzzle2
+          var puzzle2Div = document.getElementById("puzzle2");
+          puzzle2Div.style.display = "block";
+        } else {
+          // 清除旧的题目，并重新渲染题目
+          document.body.innerHTML = "";
+          renderQuestions();
+        }
       } else {
         alert("Wrong answer. Try again!");
       }
     }
+
+    // 页面加载时渲染题目
+    window.onload = function() {
+      renderQuestions();
+    };
   </script>
 </body>
 </html>
