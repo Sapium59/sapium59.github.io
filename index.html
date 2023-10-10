@@ -1,96 +1,102 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Mystery Game</title>
-  <style>
-    /* 自定义样式 */
-    #puzzle2 {
-      display: none;
-      margin-top: 20px;
-      padding: 10px;
-      background-color: #f0f0f0;
-    }
-  </style>
-</head>
-<body>
-  <h1>Welcome to the Mystery Game!</h1>
-  
-  <p>Enter the correct answer to proceed to the next puzzle:</p>
-  <input type="text" id="answerInput">
-  <button onclick="checkAnswer()">Submit</button>
-
-  <div id="puzzle2" style="display: none;">
-    <!-- Puzzle2的内容 -->
-    <h2>Puzzle 2</h2>
-    <p>This is Puzzle 2.</p>
-  </div>
-
-  <script>
-    // 页面加载时检查用户解锁的谜题数量
-    function checkUnlockedPuzzleNumber() {
-      var unlockedPuzzleNumber = localStorage.getItem("unlocked_puzzle_number");
-      if (!unlockedPuzzleNumber) {
-        // 初始情况下用户解锁了3道题
-        unlockedPuzzleNumber = 3;
-        localStorage.setItem("unlocked_puzzle_number", unlockedPuzzleNumber);
+  <head>
+    <title>Puzzle Game</title>
+    <script>
+      // 获取已答对的题目数量
+      function getCorrectAnswersCount() {
+        return localStorage.getItem("correct_answers_count") || 0;
       }
-      return parseInt(unlockedPuzzleNumber);
-    }
 
-    // 获取正确答案列表
-    function getAnswerList() {
-      // 隐藏的答案列表
-      var answerList = [
-        "answer1",
-        "answer2",
-        "answer3",
-        // ...更多答案
-      ];
-      return answerList;
-    }
-
-    // 渲染题目
-    function renderQuestions() {
-      var unlockedPuzzleNumber = checkUnlockedPuzzleNumber();
-      var answerList = getAnswerList();
-
-      // 根据解锁的谜题数量进行渲染
-      for (var i = 0; i < unlockedPuzzleNumber; i++) {
-        var questionElement = document.createElement("p");
-        questionElement.textContent = "Question " + (i + 1);
-        document.body.appendChild(questionElement);
+      // 更新已答对的题目数量
+      function updateCorrectAnswersCount(count) {
+        localStorage.setItem("correct_answers_count", count);
       }
-    }
 
-    // 判断回答正误
-    function checkAnswer() {
-      var answer = document.getElementById("answerInput").value;
-      var answerList = getAnswerList();
-      var unlockedPuzzleNumber = checkUnlockedPuzzleNumber();
+      // 获取题目字典
+      function getQuestionDictionary() {
+        return [
+          {
+            question: "Question 1",
+            answer: "Answer 1"
+          },
+          {
+            question: "Question 2",
+            answer: "Answer 2"
+          },
+          {
+            question: "Question 3",
+            answer: "Answer 3"
+          }
+        ];
+      }
 
-      if (answer === answerList[unlockedPuzzleNumber]) {
-        // 回答正确
-        unlockedPuzzleNumber++;
-        localStorage.setItem("unlocked_puzzle_number", unlockedPuzzleNumber);
+      // 渲染题目
+      function renderQuestions() {
+        var correctAnswersCount = getCorrectAnswersCount();
+        var questionDictionary = getQuestionDictionary();
 
-        if (unlockedPuzzleNumber === answerList.length) {
-          // 已经解锁了所有谜题，显示Puzzle2
-          var puzzle2Div = document.getElementById("puzzle2");
-          puzzle2Div.style.display = "block";
-        } else {
-          // 清除旧的题目，并重新渲染题目
-          document.body.innerHTML = "";
-          renderQuestions();
+        // 获取题目容器
+        var questionsContainer = document.getElementById("questionsContainer");
+
+        // 清空题目容器
+        questionsContainer.innerHTML = "";
+
+        // 根据已答对的题目数量，渲染相应数量的题目
+        for (var i = 0; i < correctAnswersCount; i++) {
+          var question = questionDictionary[i].question;
+          var questionElement = document.createElement("p");
+          questionElement.textContent = question;
+          questionsContainer.appendChild(questionElement);
         }
-      } else {
-        alert("Wrong answer. Try again!");
       }
-    }
 
-    // 页面加载时渲染题目
-    window.onload = function() {
-      renderQuestions();
-    };
-  </script>
-</body>
+      // 初始化页面
+      function initializePage() {
+        renderQuestions();
+      }
+
+      // 提交答案
+      function submitAnswer() {
+        var answerInput = document.getElementById("answerInput");
+        var answer = answerInput.value;
+
+        // 获取当前应当回答的题目的正确答案
+        var correctAnswersCount = getCorrectAnswersCount();
+        var questionDictionary = getQuestionDictionary();
+        var correctAnswer = questionDictionary[correctAnswersCount].answer;
+
+        if (answer === correctAnswer) {
+          // 更新已答对的题目数量
+          var newCorrectAnswersCount = parseInt(correctAnswersCount) + 1;
+          updateCorrectAnswersCount(newCorrectAnswersCount);
+
+          // 清除输入框的值
+          answerInput.value = "";
+
+          // 重新渲染题目
+          renderQuestions();
+
+          // 判断是否已经解锁了所有题目
+          if (newCorrectAnswersCount === questionDictionary.length) {
+            // 显示 Puzzle2
+            var puzzle2Div = document.getElementById("puzzle2");
+            puzzle2Div.style.display = "block";
+          }
+        } else {
+          alert("Wrong answer. Try again!");
+        }
+      }
+    </script>
+  </head>
+  <body onload="initializePage()">
+    <h1>Puzzle Game</h1>
+    <div id="questionsContainer"></div>
+    <input type="text" id="answerInput" placeholder="Enter your answer" />
+    <button onclick="submitAnswer()">Submit</button>
+    <div id="puzzle2" style="display: none;">
+      <h2>Puzzle 2</h2>
+      <!-- 在这里放置第二个谜题的内容 -->
+    </div>
+  </body>
 </html>
