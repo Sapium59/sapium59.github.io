@@ -2,6 +2,15 @@
 <html>
 <head>
   <title>Mystery Game</title>
+  <style>
+    /* 自定义样式 */
+    #puzzle2 {
+      display: none;
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #f0f0f0;
+    }
+  </style>
 </head>
 <body>
   <h1>Welcome to the Mystery Game!</h1>
@@ -10,14 +19,21 @@
   <input type="text" id="answerInput">
   <button onclick="checkAnswer()">Submit</button>
 
+  <div id="puzzle2" style="display: none;">
+    <!-- Puzzle2的内容 -->
+    <h2>Puzzle 2</h2>
+    <p>This is Puzzle 2.</p>
+  </div>
+
   <script>
     // 页面加载时检查用户的提交历史
     window.onload = function() {
       var answerHistory = localStorage.getItem("answerHistory");
       if (answerHistory === "correct") {
         // 用户之前提交过正确答案，执行相应操作
-        // 例如直接跳转到下一个谜题页面
-        window.location.href = "puzzle2.html";
+        // 例如直接显示Puzzle2
+        var puzzle2Div = document.getElementById("puzzle2");
+        puzzle2Div.style.display = "block";
       } else {
         renderQuestions(); // 渲染题目
       }
@@ -63,7 +79,10 @@
       if (answer === "correct") {
         // 存储用户的正确答案
         localStorage.setItem("answerHistory", "correct");
-        window.location.reload(); // 刷新谜题页面，从而解锁新的题目
+        
+        // 显示Puzzle2
+        var puzzle2Div = document.getElementById("puzzle2");
+        puzzle2Div.style.display = "block";
       } else {
         alert("Wrong answer. Try again!");
       }
