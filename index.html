@@ -18,6 +18,8 @@
         // 用户之前提交过正确答案，执行相应操作
         // 例如直接跳转到下一个谜题页面
         window.location.href = "puzzle2.html";
+      } else {
+        renderQuestions(); // 渲染题目
       }
     }
 
@@ -61,26 +63,11 @@
       if (answer === "correct") {
         // 存储用户的正确答案
         localStorage.setItem("answerHistory", "correct");
-        window.reload(); // 刷新谜题页面，从而解锁新的题目
+        window.location.reload(); // 刷新谜题页面，从而解锁新的题目
       } else {
         alert("Wrong answer. Try again!");
       }
     }
-    
-    // 页面加载时渲染题目
-    window.onload = function() {
-      renderQuestions();
-    }
   </script>
 </body>
 </html>
-
-
-<body>
-
-
-  <script>
-  </script>
-</body>
-</html>
-
