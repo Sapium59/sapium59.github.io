@@ -136,10 +136,13 @@
         alert("Wrong answer. Try again!");
       }
 
-      }
+      // 页面加载时渲染题目
+      window.onload = function() {
+        initializePage();
+      };
     </script>
   </head>
-  <body onload="initializePage()">
+  <body>
     <h1>Puzzle Game</h1>
     <div id="questionsContainer">
       <p> base question container </p>
