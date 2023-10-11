@@ -139,9 +139,9 @@
       
             // 判断是否已经解锁了所有题目
             if (getAnsweredQuestions().length === questionDictionary.length) {
-              // 显示 MetaPuzzle
-              var MetaPuzzleDiv = document.getElementById("MetaPuzzle");
-              MetaPuzzleDiv.style.display = "block";
+              // 显示 Puzzle2
+              var Puzzle2Div = document.getElementById("Puzzle2");
+              Puzzle2Div.style.display = "block";
             }
       
             return;
@@ -164,7 +164,7 @@
     </div>
     <input type="text" id="answerInput" placeholder="Enter your answer" />
     <button onclick="submitAnswer()">Submit</button>
-    <div id="MetaPuzzle" style="display: none;">
+    <div id="Puzzle2" style="display: none;">
       <h2>Puzzle 2</h2>
       <!-- 在这里放置第二个谜题的内容 -->
     </div>
