@@ -80,6 +80,11 @@
         // 清空题目容器
         questionsContainer.innerHTML = "";
 
+        // debug: no question text
+        var questionElement = document.createElement("p");
+        questionElement.textContent = unlockQuestionNumber;
+        questionsContainer.appendChild(questionElement);
+
         // 渲染相应数量的题目
         for (var i = 0; i < unlockQuestionNumber; i++) {
           var question = questionDictionary[i].question;
