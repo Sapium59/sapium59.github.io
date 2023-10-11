@@ -76,7 +76,8 @@
       // 渲染题目
       function renderQuestions() {
         // 根据已答对的题目数量，计算当前已解锁到题目数量
-        var correctAnswersCount = getAnsweredQuestions().length;
+        var answeredQuestions = getAnsweredQuestions() || "not yet";
+        var correctAnswersCount = answeredQuestions.length;
         var unlockMap = getUnlockMap()
         var unlockQuestionNumber = unlockMap[correctAnswersCount]
         var questionDictionary = getQuestionDictionary();
@@ -85,11 +86,11 @@
         var questionsContainer = document.getElementById("questionsContainer");
 
         // 清空题目容器
-        questionsContainer.textContent = `Debug: you have ${correctAnswersCount} correct guesses!`;
+        questionsContainer.textContent = "";
 
-        // debug: no question text
+        // 显示当前解题进度
         var questionElement = document.createElement("p");
-        questionElement.textContent = unlockQuestionNumber;
+        questionElement.textContent = `1. You have ${answeredQuestions} correct guesses! 2. You have unlocked ${unlockQuestionNumber} questions!`;
         questionsContainer.appendChild(questionElement);
 
         // 渲染相应数量的题目
@@ -114,13 +115,14 @@
         // 获取当前应当回答的题目的正确答案
         var questionDictionary = getQuestionDictionary();
         var unlockMap = getUnlockMap();
-        var correctAnswersCount = getCorrectAnswers().length;
+        var answeredQuestions = getAnsweredQuestions();
+        var correctAnswersCount = answeredQuestions.length;
         var unlockQuestionNumber = unlockMap[correctAnswersCount];
       
         for (var i = 0; i < unlockQuestionNumber; i++) {
           if (!isAnswered(i) && answer === questionDictionary[i].answer) {
             // 更新已答对的题目编号数组
-            var answeredQuestions = getAnsweredQuestions();
+            
             answeredQuestions.push(i);
             localStorage.setItem("answeredQuestions", JSON.stringify(answeredQuestions));
 
@@ -131,7 +133,7 @@
             renderQuestions();
       
             // 判断是否已经解锁了所有题目
-            if (getCorrectAnswers().length === questionDictionary.length) {
+            if (getAnsweredQuestions().length === questionDictionary.length) {
               // 显示 Puzzle2
               var puzzle2Div = document.getElementById("puzzle2");
               puzzle2Div.style.display = "block";
