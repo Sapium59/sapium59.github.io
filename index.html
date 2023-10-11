@@ -78,7 +78,8 @@
         var questionsContainer = document.getElementById("questionsContainer");
 
         // 清空题目容器
-        questionsContainer.innerHTML = "";
+        questionsContainer.innerHTML = "      <p> clear question container </p>
+ ";
 
         // debug: no question text
         var questionElement = document.createElement("p");
@@ -140,7 +141,9 @@
   </head>
   <body onload="initializePage()">
     <h1>Puzzle Game</h1>
-    <div id="questionsContainer"></div>
+    <div id="questionsContainer">
+      <p> base question container </p>
+    </div>
     <input type="text" id="answerInput" placeholder="Enter your answer" />
     <button onclick="submitAnswer()">Submit</button>
     <div id="puzzle2" style="display: none;">
