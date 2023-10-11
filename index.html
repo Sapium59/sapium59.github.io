@@ -3,15 +3,22 @@
   <head>
     <title>Puzzle Game</title>
     <script>
-      // 获取已答对的题目数量
-      function getCorrectAnswersCount() {
-        return localStorage.getItem("correct_answers_count") || 0;
+      // 获取已答对的题目编号
+      function getAnsweredQuestions() {
+        var answeredQuestions = localStorage.getItem("answeredQuestions");
+        if (answeredQuestions === null) {
+          return [];
+        } else {
+          return JSON.parse(answeredQuestions); 
+        }
+      }
+      
+      // 检查问题是否已经被回答过
+      function isAnswered(questionNumber) {
+        var answeredQuestions = getAnsweredQuestions();
+        return answeredQuestions.includes(questionNumber);
       }
 
-      // 更新已答对的题目数量
-      function updateCorrectAnswersCount(count) {
-        localStorage.setItem("correct_answers_count", count);
-      }
 
       // 获取题目字典
       function getQuestionDictionary() {
@@ -69,7 +76,7 @@
       // 渲染题目
       function renderQuestions() {
         // 根据已答对的题目数量，计算当前已解锁到题目数量
-        var correctAnswersCount = getCorrectAnswersCount();
+        var correctAnswersCount = getAnsweredQuestions().length;
         var unlockMap = getUnlockMap()
         var unlockQuestionNumber = unlockMap[correctAnswersCount]
         var questionDictionary = getQuestionDictionary();
@@ -78,8 +85,7 @@
         var questionsContainer = document.getElementById("questionsContainer");
 
         // 清空题目容器
-        questionsContainer.textContent = "      <p> clear question container </p>
- ";
+        questionsContainer.textContent = "<p> clear question container </p>";
 
         // debug: no question text
         var questionElement = document.createElement("p");
@@ -104,7 +110,7 @@
       function submitAnswer() {
         var answerInput = document.getElementById("answerInput");
         var answer = answerInput.value;
-      
+
         // 获取当前应当回答的题目的正确答案
         var questionDictionary = getQuestionDictionary();
         var unlockMap = getUnlockMap();
@@ -114,8 +120,10 @@
         for (var i = 0; i < unlockQuestionNumber; i++) {
           if (!isAnswered(i) && answer === questionDictionary[i].answer) {
             // 更新已答对的题目编号数组
-            updateCorrectAnswers(i);
-      
+            var answeredQuestions = getAnsweredQuestions();
+            answeredQuestions.push(i);
+            localStorage.setItem("answeredQuestions", JSON.stringify(answeredQuestions));
+
             // 清除输入框的值
             answerInput.value = "";
       
