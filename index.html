@@ -90,7 +90,7 @@
 
         // 显示当前解题进度
         var questionElement = document.createElement("p");
-        questionElement.textContent = `2020\n1. You have ${answeredQuestions} correct guesses! 2. You have unlocked ${unlockQuestionNumber} questions!`;
+        questionElement.textContent = `2024\n1. You have ${answeredQuestions} correct guesses! 2. You have unlocked ${unlockQuestionNumber} questions!`;
         questionsContainer.appendChild(questionElement);
 
         // 渲染相应数量的题目
@@ -121,7 +121,8 @@
       
         for (var i = 0; i < unlockQuestionNumber; i++) {
           if (isAnswered(i)) {
-            alert("You have answered this one. Try another!");
+            // alert("You have answered this one. Try another!");
+            alert(`你已经正确回答了第${i+1}题！试试别的吧。`);
             return;
           }
           if (answer === questionDictionary[i].answer) {
