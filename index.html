@@ -120,25 +120,26 @@
         var unlockQuestionNumber = unlockMap[correctAnswersCount];
       
         for (var i = 0; i < unlockQuestionNumber; i++) {
-          if (!isAnswered(i) && answer === questionDictionary[i].answer) {
-            // 更新已答对的题目编号数组
-            
-            answeredQuestions.push(i);
-            localStorage.setItem("answeredQuestions", JSON.stringify(answeredQuestions));
+          if (!isAnswered(i)) {
+            if (answer === questionDictionary[i].answer) {
+              // 更新已答对的题目编号数组
+              
+              answeredQuestions.push(i);
+              localStorage.setItem("answeredQuestions", JSON.stringify(answeredQuestions));
 
-            // 清除输入框的值
-            answerInput.value = "";
-      
-            // 重新渲染题目
-            renderQuestions();
-      
-            // 判断是否已经解锁了所有题目
-            if (getAnsweredQuestions().length === questionDictionary.length) {
-              // 显示 Puzzle2
-              var puzzle2Div = document.getElementById("puzzle2");
-              puzzle2Div.style.display = "block";
+              // 清除输入框的值
+              answerInput.value = "";
+        
+              // 重新渲染题目
+              renderQuestions();
+        
+              // 判断是否已经解锁了所有题目
+              if (getAnsweredQuestions().length === questionDictionary.length) {
+                // 显示 Puzzle2
+                var puzzle2Div = document.getElementById("puzzle2");
+                puzzle2Div.style.display = "block";
+              }
             }
-      
             return;
           }
         }
